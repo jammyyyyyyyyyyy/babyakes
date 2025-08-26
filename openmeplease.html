@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Love Letter for Babycakes 💖</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Georgia&display=swap');
+
+  body {
+    margin: 0;
+    background: #ffc0cb;
+    font-family: 'Comic Neue', cursive, Georgia, serif;
+    color: #800080;
+    overflow-x: hidden;
+  }
+  .centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    text-align: center;
+  }
+  input[type="text"], input[type="password"] {
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #c71585;
+    width: 250px;
+    text-align: center;
+  }
+  button {
+    margin-top: 20px;
+    padding: 12px 30px;
+    border-radius: 15px;
+    border: none;
+    background-color: #ff69b4;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1em;
+    cursor: pointer;
+    box-shadow: 0 4px 10px #ff1493aa;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #c71585;
+  }
+  .hidden {
+    display: none;
+  }
+  .hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    z-index: 999;
+  }
+  .heart {
+    position: absolute;
+    font-size: 40px; /* Bigger hearts */
+    animation: floatUp 6s linear forwards;
+    user-select: none;
+    text-shadow: 0 0 5px #c71585cc; /* glow for visibility */
+    opacity: 0.8;
+  }
+  @keyframes floatUp {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-150vh) scale(1.5);
+      opacity: 0;
+    }
+  }
+  #typingMessage {
+    white-space: pre-wrap;
+    font-size: 1.2em;
+    margin-top: 20px;
+    min-height: 150px;
+    max-width: 80vw;
+    margin-left: auto;
+    margin-right: auto;
+    color: #4b0082;
+    font-family: Georgia, serif;
+  }
+  #topPhrase, #bottomPhrase {
+    font-weight: 700;
+    font-size: 1.4em;
+    margin: 10px 0;
+    color: #c71585;
+  }
+</style>
+</head>
+<body>
+
+<div id="passwordScreen" class="centered">
+  <h1>Hey there pretty! 💖</h1>
+  <p>What’s the magic word?</p>
+  <input type="password" id="passwordInput" placeholder="Enter password" autocomplete="off" />
+  <button id="passwordBtn">Enter</button>
+  <p id="passwordError" style="color:#b22222; margin-top:10px;"></p>
+</div>
+
+<div id="nameScreen" class="centered hidden">
+  <h2> Oh hello there, your pretty name please? 😊</h2>
+  <input type="text" id="nameInput" placeholder="Enter your name" autocomplete="off" />
+  <button id="nameBtn">OK</button>
+  <p id="nameError" style="color:#b22222; margin-top:10px;"></p>
+</div>
+
+<div id="askTimeScreen" class="centered hidden">
+  <h2 id="greetingText"></h2>
+  <p>Can I have a little bit of your time?</p>
+  <button id="sureBtn">💖 Sure 💖</button>
+  <button id="sorryBtn">🙁 Sorry, no</button>
+</div>
+
+<div id="sadMessageScreen" class="centered hidden" style="background: #ffe6ea; color:#800000; padding: 20px; border-radius: 15px; max-width: 90vw;">
+  <h2>😢 Oh... okay.</h2>
+  <p id="sadMessageText" style="min-height: 100px;"></p>
+  <div id="sadButtons" style="margin-top:20px;">
+    <button id="proceedBtn" style="background-color:#ff69b4; margin-right: 15px;">💌 Okay, let me hear it</button>
+    <button id="exitBtn" style="background-color:#d3d3d3; color:#333;">🚪 Okay</button>
+  </div>
+</div>
+
+<div id="floatingHeartsScreen" class="centered hidden" style="background:#fff0f5; flex-direction: column; position: relative;">
+  <div id="topPhrase">Wait, I’m gathering courage... 💗</div>
+  <div class="hearts"></div>
+  <div id="bottomPhrase" style="margin-top: 30px; font-weight: normal;"></div>
+</div>
+
+<div id="loveMessageScreen" class="centered hidden" style="background:#ffd6e8; flex-direction: column; max-width: 90vw; margin: auto; border-radius: 15px; padding: 20px; color: #4b0082;">
+  <h2>💌 From My Heart to Yours 💌</h2>
+  <div id="typingMessage"></div>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="love_song.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+  const password = 'babycakes';
+  const loveMessage = `Have I told you how much I love you?
+Have I told you how pretty you are?
+
+Have I told you how lucky I am to have you?
+If not, then let me say it now...
+
+I love you so much my pretty wifey. I'm more than lucky to have you.
+You are deeply loved by me. Always. 💗
+Thank you for coming into my life. I love you so much.`;
+
+  // Elements
+  const passwordScreen = document.getElementById('passwordScreen');
+  const passwordInput = document.getElementById('passwordInput');
+  const passwordBtn = document.getElementById('passwordBtn');
+  const passwordError = document.getElementById('passwordError');
+
+  const nameScreen = document.getElementById('nameScreen');
+  const nameInput = document.getElementById('nameInput');
+  const nameBtn = document.getElementById('nameBtn');
+  const nameError = document.getElementById('nameError');
+
+  const askTimeScreen = document.getElementById('askTimeScreen');
+  const greetingText = document.getElementById('greetingText');
+  const sureBtn = document.getElementById('sureBtn');
+  const sorryBtn = document.getElementById('sorryBtn');
+
+  const sadMessageScreen = document.getElementById('sadMessageScreen');
+  const sadMessageText = document.getElementById('sadMessageText');
+  const proceedBtn = document.getElementById('proceedBtn');
+  const exitBtn = document.getElementById('exitBtn');
+
+  const floatingHeartsScreen = document.getElementById('floatingHeartsScreen');
+  const heartsContainer = floatingHeartsScreen.querySelector('.hearts');
+  const topPhrase = document.getElementById('topPhrase');
+  const bottomPhrase = document.getElementById('bottomPhrase');
+
+  const loveMessageScreen = document.getElementById('loveMessageScreen');
+  const typingMessage = document.getElementById('typingMessage');
+
+  const bgMusic = document.getElementById('bgMusic');
+
+  let userName = '';
+
+  // Password check
+  passwordBtn.addEventListener('click', () => {
+    if(passwordInput.value.toLowerCase() === password) {
+      passwordError.textContent = '';
+      passwordScreen.classList.add('hidden');
+      nameScreen.classList.remove('hidden');
+      nameInput.focus();
+    } else {
+      passwordError.textContent = 'Wrong password! Try again 💔';
+    }
+  });
+  passwordInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') passwordBtn.click();
+  });
+
+  // Name input check
+  nameBtn.addEventListener('click', () => {
+    const val = nameInput.value.trim();
+    if(val.length < 1) {
+      nameError.textContent = 'Please enter your name, pretty! 🥺';
+    } else {
+      nameError.textContent = '';
+      userName = val;
+      nameScreen.classList.add('hidden');
+      showAskTimeScreen();
+    }
+  });
+  nameInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') nameBtn.click();
+  });
+
+  // Ask for time screen
+  function showAskTimeScreen() {
+    greetingText.textContent = `Hey there, ${userName}! 💖`;
+    askTimeScreen.classList.remove('hidden');
+  }
+  sureBtn.addEventListener('click', () => {
+    askTimeScreen.classList.add('hidden');
+    showFloatingHearts();
+  });
+  sorryBtn.addEventListener('click', () => {
+    askTimeScreen.classList.add('hidden');
+    showSadMessage();
+  });
+
+  // Sad message screen
+  function showSadMessage() {
+    sadMessageText.textContent = '';
+    sadMessageScreen.classList.remove('hidden');
+    typeText(sadMessageText, "I'm sorry for disturbing you 😔\nI just wanted to say something special... maybe another time.", 60, () => {
+      // Show buttons after typing
+      sadMessageText.nextElementSibling.style.marginTop = "20px";
+    });
+  }
+  proceedBtn.addEventListener('click', () => {
+    sadMessageScreen.classList.add('hidden');
+    showFloatingHearts();
+  });
+  exitBtn.addEventListener('click', () => {
+    window.close(); // Close tab/window (may not work in all browsers)
+  });
+
+  // Floating hearts
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = (30 + Math.random() * 30) + 'px'; // bigger hearts now: 30px to 60px
+    heart.style.animationDuration = (5 + Math.random() * 3) + 's';
+    heart.style.opacity = 0.8 + Math.random() * 0.2; // slightly more visible
+    heartsContainer.appendChild(heart);
+    heart.textContent = '💖';
+    setTimeout(() => heartsContainer.removeChild(heart), 8000);
+  }
+
+  let heartInterval;
+  function showFloatingHearts() {
+    floatingHeartsScreen.classList.remove('hidden');
+    bottomPhrase.textContent = '';
+    heartInterval = setInterval(createHeart, 200); // spawn more often for fullness
+
+    // Start music immediately with fade-in when hearts appear
+    bgMusic.volume = 0;
+    bgMusic.play();
+    let vol = 0;
+    const fadeInInterval = setInterval(() => {
+      if (vol < 0.5) {
+        vol += 0.02;
+        bgMusic.volume = vol;
+      } else {
+        clearInterval(fadeInInterval);
+      }
+    }, 100);
+
+    // After 10 seconds, show "Okay, here it is..."
+    setTimeout(() => {
+      clearInterval(heartInterval);
+      bottomPhrase.textContent = '';
+      typeText(bottomPhrase, "Okay, here it is...", 80, () => {
+        setTimeout(() => {
+          floatingHeartsScreen.classList.add('hidden');
+          playMusicAndShowMessage(); // music already playing, so just show message now
+        }, 1500);
+      });
+    }, 10000);
+  }
+
+  // Typing function
+  function typeText(element, text, speed = 60, callback) {
+    element.textContent = '';
+    let i = 0;
+    function typing() {
+      if(i < text.length) {
+        element.textContent += text.charAt(i);
+        i++;
+        setTimeout(typing, speed);
+      } else if(callback) {
+        callback();
+      }
+    }
+    typing();
+  }
+
+  // Love message typing slower
+  function playMusicAndShowMessage() {
+    loveMessageScreen.classList.remove('hidden');
+    typingMessage.textContent = '';
+
+    // No need to play music here, already playing
+
+    typeText(typingMessage, `Hello there ${userName},\n\n${loveMessage}\n\nForever and Always,\n💖 Jam 💖`, 90, () => {
+      // Fade music out after message finished typing
+      let volOut = bgMusic.volume;
+      const fadeOutInterval = setInterval(() => {
+        if (volOut > 0) {
+          volOut -= 0.02;
+          bgMusic.volume = volOut;
+        } else {
+          bgMusic.pause();
+          clearInterval(fadeOutInterval);
+        }
+      }, 100);
+    });
+  }
+
+  // Focus first input on load
+  window.onload = () => {
+    passwordInput.focus();
+  };
+</script>
+
+</body>
+</html>
